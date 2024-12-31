@@ -12,9 +12,10 @@
     "paths": {
       "@/*": ["./src/*"]
     },
-    "typeRoots": ["./node_modules/@types"],
+    "typeRoots": ["./node_modules/@types", "./node_modules/@cloudflare"],
     "types": [
-      "@cloudflare/workers-types/2023-07-01"
+      "node",
+      "workers-types/2023-07-01"
     ],
     "strict": true,
     "outDir": "./dist",
