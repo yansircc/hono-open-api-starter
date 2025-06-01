@@ -26,7 +26,6 @@ export const envInfo: AppRouteHandler<EnvInfoRoute> = async (c) => {
     logLevel: env.LOG_LEVEL,
     hasDatabase,
     features: {
-      port: env.PORT,
       cloudflareConfigured: !!(
         process.env?.CLOUDFLARE_ACCOUNT_ID &&
         process.env?.CLOUDFLARE_DATABASE_ID &&

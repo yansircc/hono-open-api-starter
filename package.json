@@ -18,7 +18,9 @@
     "db:push:remote": "wrangler d1 migrations apply DB --remote",
     "db:push:test": "drizzle-kit push --config=drizzle.config.test.ts",
     "db:studio:local": "LOCAL_DB_PATH=$(find .wrangler/state/v3/d1/miniflare-D1DatabaseObject -type f -name '*.sqlite' -print -quit) drizzle-kit studio",
-    "db:studio:remote": "drizzle-kit studio"
+    "db:studio:remote": "drizzle-kit studio",
+    "env:sync:local": "bun scripts/sync-dev-vars.ts",
+		"env:sync:remote": "wrangler secret bulk .prod.vars"
   },
   "dependencies": {
     "@hono/node-server": "^1.14.3",
