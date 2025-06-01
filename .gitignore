@@ -35,4 +35,3 @@ dist
 .prod.vars
 /docs/
 /.wrangler/
-worker-configuration.d.ts
