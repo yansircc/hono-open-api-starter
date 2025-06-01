@@ -1,14 +1,13 @@
 import type { OpenAPIHono, RouteConfig, RouteHandler } from "@hono/zod-openapi";
 import type { PinoLogger } from "hono-pino";
 
-import type { Environment } from "@/env";
-
+// 使用 Wrangler 生成的 Env 类型
 export interface AppBindings {
-  Bindings: Environment;
+  Bindings: Env;
   Variables: {
     logger: PinoLogger;
   };
-};
+}
 
 export type AppOpenAPI = OpenAPIHono<AppBindings>;
 

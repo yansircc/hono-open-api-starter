@@ -32,3 +32,6 @@ test.db
 .vercel
 dist
 .dev.vars
+/docs/
+/.wrangler/
+worker-configuration.d.ts

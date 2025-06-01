@@ -3,3 +3,9 @@ main = "src/app.ts"
 compatibility_date = "2024-09-25"
 compatibility_flags = [ "nodejs_compat" ]
 keep_vars = true
+
+[[d1_databases]]
+binding = "DB"
+database_name = "hono-server"
+database_id = "74907fe1-08cd-4fde-aca8-96dd8dddd05a"
+migrations_dir = "src/db/migrations"

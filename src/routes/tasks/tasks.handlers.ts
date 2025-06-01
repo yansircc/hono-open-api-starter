@@ -2,29 +2,28 @@ import { eq } from "drizzle-orm";
 import * as HttpStatusCodes from "stoker/http-status-codes";
 import * as HttpStatusPhrases from "stoker/http-status-phrases";
 
-import type { AppRouteHandler } from "@/lib/types";
-
-import { createDb } from "@/db";
+import { getDatabaseFromContext } from "@/db/client-factory";
 import { tasks } from "@/db/schema";
 import { ZOD_ERROR_CODES, ZOD_ERROR_MESSAGES } from "@/lib/constants";
+import type { AppRouteHandler } from "@/lib/types";
 
 import type { CreateRoute, GetOneRoute, ListRoute, PatchRoute, RemoveRoute } from "./tasks.routes";
 
 export const list: AppRouteHandler<ListRoute> = async (c) => {
-  const { db } = createDb(c.env);
+  const db = getDatabaseFromContext(c);
   const tasks = await db.query.tasks.findMany();
   return c.json(tasks);
 };
 
 export const create: AppRouteHandler<CreateRoute> = async (c) => {
-  const { db } = createDb(c.env);
+  const db = getDatabaseFromContext(c);
   const task = c.req.valid("json");
   const [inserted] = await db.insert(tasks).values(task).returning();
   return c.json(inserted, HttpStatusCodes.OK);
 };
 
 export const getOne: AppRouteHandler<GetOneRoute> = async (c) => {
-  const { db } = createDb(c.env);
+  const db = getDatabaseFromContext(c);
   const { id } = c.req.valid("param");
   const task = await db.query.tasks.findFirst({
     where(fields, operators) {
@@ -45,7 +44,7 @@ export const getOne: AppRouteHandler<GetOneRoute> = async (c) => {
 };
 
 export const patch: AppRouteHandler<PatchRoute> = async (c) => {
-  const { db } = createDb(c.env);
+  const db = getDatabaseFromContext(c);
   const { id } = c.req.valid("param");
   const updates = c.req.valid("json");
 
@@ -86,12 +85,17 @@ export const patch: AppRouteHandler<PatchRoute> = async (c) => {
 };
 
 export const remove: AppRouteHandler<RemoveRoute> = async (c) => {
-  const { db } = createDb(c.env);
+  const db = getDatabaseFromContext(c);
   const { id } = c.req.valid("param");
-  const result = await db.delete(tasks)
-    .where(eq(tasks.id, id));
-
-  if (result.rowsAffected === 0) {
+  
+  // 先检查任务是否存在
+  const existingTask = await db.query.tasks.findFirst({
+    where(fields, operators) {
+      return operators.eq(fields.id, id);
+    },
+  });
+  
+  if (!existingTask) {
     return c.json(
       {
         message: HttpStatusPhrases.NOT_FOUND,
@@ -99,6 +103,9 @@ export const remove: AppRouteHandler<RemoveRoute> = async (c) => {
       HttpStatusCodes.NOT_FOUND,
     );
   }
+  
+  // 删除任务
+  await db.delete(tasks).where(eq(tasks.id, id));
 
   return c.body(null, HttpStatusCodes.NO_CONTENT);
 };

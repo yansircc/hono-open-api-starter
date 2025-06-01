@@ -1,8 +1,8 @@
 import type { Context, MiddlewareHandler } from "hono";
 import type { Env } from "hono-pino";
 
-import { pinoLogger as logger } from "hono-pino";
 import { randomUUID } from "node:crypto";
+import { pinoLogger as logger } from "hono-pino";
 import pino from "pino";
 import pretty from "pino-pretty";
 

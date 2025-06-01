@@ -8,13 +8,15 @@ import { createRouter } from "@/lib/create-app";
 const router = createRouter()
   .openapi(
     createRoute({
-      tags: ["Index"],
+      tags: ["首页"],
       method: "get",
+      summary: "首页",
+      description: "首页",
       path: "/",
       responses: {
         [HttpStatusCodes.OK]: jsonContent(
           createMessageObjectSchema("Tasks API"),
-          "Tasks API Index",
+          "首页",
         ),
       },
     }),
